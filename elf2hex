@@ -4,7 +4,7 @@ unset bit_width
 unset input
 unset output
 objcopy="/opt/riscv/bin/riscv32-unknown-linux-gnu-objcopy"
-bin2hex="/home/andrew/RISCVBuild/freedom-bin2hex.sh"
+bin2hex="/home/andrew/Desktop/RISCVBuild/freedom-bin2hex.sh"
 while [[ "$1" != "" ]]
 do
     case "$1" in
