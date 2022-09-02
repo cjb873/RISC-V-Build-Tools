@@ -1,2 +1,2 @@
 #!/bin/sh
-exec python -u 'freedom-bin2hex.py' ${1+"$@"}
+exec python3 -u 'freedom-bin2hex.py' ${1+"$@"}
