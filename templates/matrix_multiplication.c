@@ -1,32 +1,25 @@
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
+#include "uart.h"
+#include "intToStr.h"
 
-// function prototypes
 void multiplyMatricies( const int factorOne[][ MATRIX_1_COLS], const int 
           factorTwo[][ MATRIX_2_COLS ], int productMatrix[][ MATRIX_2_COLS ] );
 
 int findDotProduct( const int row, const int col, const int 
         factorOne[][ MATRIX_1_COLS ], const int factorTwo[][ MATRIX_2_COLS ] );
 
-void sendStringToUart(const char inStr[], char* address);
-void sendCharToUart(const char inChar, char* address);
+int getRand();
+void printMatrix(int matrix[][MATRIX_1_COLS], char* address);
 
 // main program
 int main()
    {
    
    // declare variables
-   int startCycles = 0, endCycles = 0, totalCycles = 0;
    int rowIndex, colIndex;
    char* LED = (char*)0x00010000;
    char* UART = (char*)0x00010004;
-
-   char cycleStr[] = "Average number of cycles: ";
-   char* factorOneStr = "Factor One: "; 
-   char* factorTwoStr = "Factor Two: ";
-   char* productStr = "Factor Three: ";
-   char intAsStr[25];
 
    int matrixOne[ MATRIX_1_ROWS ][ MATRIX_1_COLS ]; 
    int matrixTwo[ MATRIX_2_ROWS ][ MATRIX_2_COLS ];
@@ -45,87 +38,59 @@ int main()
          {
          for(colIndex = 0; colIndex < MATRIX_1_COLS; colIndex++)
             {
-	    matrixOne[rowIndex][colIndex] = (rand() % 50);
-	    }
+            matrixOne[rowIndex][colIndex] = getRand();
+            }
          }
 
       for(rowIndex = 0; rowIndex < MATRIX_2_ROWS; rowIndex++)
          {
          for(colIndex = 0; colIndex < MATRIX_2_COLS; colIndex++)
             {
-	    matrixTwo[rowIndex][colIndex] = (rand() % 50);
+            matrixTwo[rowIndex][colIndex] = getRand();
 	    }
          }
       
        
-      /*
-      asm volatile( "addi %0, tp, 0"
-                   :"=r" ( startCycles )
-	           :"r" ( startCycles )
-	           :"cc"
-	          );
-      */ 
+      
+      asm volatile( "li tp, 1");
+    
       // multiply the matricies together
       
       multiplyMatricies( matrixOne, matrixTwo, productMatrix );
-      sendStringToUart("Multiplying\n", UART);
 
       *LED = 4;
       
-      /* 
-      asm volatile( "addi %0, tp, 0"
-                   :"=r" ( endCycles )
-	           :"r" ( endCycles )
-	           :"cc"
-	          );
-      */
-      //totalCycles += endCycles - startCycles;
       
-      }
+      
+   }
 
+   asm volatile( "li tp, 2");
+   
+   sendStringToUart("Done\n\r", UART);
+
+   *LED = 5;
+   
+   
    /*
-   for(int i = 0; i < MATRIX_1_ROWS; i++)
-      {
-      for(int j = 0; j < MATRIX_1_COLS; j++)
-         {
-         sprintf(intAsStr, "%d, ", matrixOne[i][j]);
-         strcat(factorOneStr, intAsStr);
-         
-         sprintf(intAsStr, "%d, ", matrixTwo[i][j]);
-         strcat(factorTwoStr, intAsStr);
-         
-         sprintf(intAsStr, "%d, ", productMatrix[i][j]);
-         strcat(productStr, intAsStr);
-         }
-      
-      strcat(factorOneStr, "\n");
-      strcat(factorTwoStr, "\n");
-      strcat(productStr, "\n");
-      }
-   */      
-   //sprintf(outStr, "\nAvg. Cycles: %d\n", totalCycles / ITERATIONS);
-    
-   sendStringToUart(factorOneStr, UART);
-   sendStringToUart(factorTwoStr, UART);
-   sendStringToUart(productStr, UART);
-   //sendStringToUart(cycleStr, UART);
+   sendStringToUart("Factor One:\n\r", UART);
+   printMatrix(matrixOne, UART);   
+
+   sendStringToUart("Factor Two:\n\r", UART);
+   printMatrix(matrixTwo, UART);
+   
+   */ 
+
 
    
-
-
+   
+   sendStringToUart("\nProduct:\n\r", UART);
+   printMatrix(productMatrix, UART);      
+  
+       
    *LED = 8;
    
    while(1);
    
-   /*  print the result
-   for( rowIndex = 0; rowIndex < MATRIX_1_ROWS; rowIndex++ ) 
-      {
-      for( colIndex = 0; colIndex < MATRIX_2_COLS; colIndex++ )
-	 {
-         sendIntToUart( productMatrix[ rowIndex ][ colIndex ] );
-	 }
-      }
-   */
 
    // end the program
    return 0;
@@ -133,29 +98,26 @@ int main()
    }
 
 
-void sendCharToUart(const char inChar, char* address)
+void printMatrix(int matrix[][MATRIX_1_COLS], char* address)
    {
    
-   *address = inChar;
-      
-   }
+   char intAsStr[33];
+   int rowIndex, colIndex;
 
-void sendStringToUart(const char inStr[], char* address)
-   {
 
-   int len = strlen(inStr);
-   int index;
-   
-   for(index = 0; index <= len ; index++)
+   for(rowIndex = 0; rowIndex < MATRIX_1_ROWS; rowIndex++)
       {
-      
-      sendCharToUart(inStr[index], address);
-
+      for(colIndex = 0; colIndex< MATRIX_1_COLS; colIndex++)
+         {
+         
+         getStr(matrix[rowIndex][colIndex], intAsStr);
+         sendStringToUart(intAsStr, address); 
+         sendStringToUart(", ", address);
+         }
+      sendStringToUart("\n\r", address);      
       }
+
    }
-
-
-
 
 void multiplyMatricies( const int factorOne[][ MATRIX_1_COLS ], 
   const int factorTwo[][ MATRIX_2_COLS ], int productMatrix[][ MATRIX_2_COLS] )
@@ -199,3 +161,19 @@ int findDotProduct( const int row, const int col, const int
    // return the dot product
    return dotProduct;
    } 
+
+int getRand()
+   {
+
+   int num = 0;
+
+   while(num == 0)
+      {
+      num = rand() % 50;
+      }
+   return num;
+
+
+
+
+   }

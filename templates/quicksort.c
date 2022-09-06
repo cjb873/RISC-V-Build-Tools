@@ -1,5 +1,8 @@
 //#include <stdio.h>
 #include <stdlib.h>
+#include "uart.h"
+#include "intToStr.h"
+
 
 // Prototypes
 void runQuickSort( int array[], int size );
@@ -17,22 +20,18 @@ int main()
    int array[ DATA_SIZE ];
    int loopIndex, arrIndex;
    char* LED = (char*)0x00010000;
-   int* UART = (int*)0x00010004;
-   int totalCycles = 0, endCycles = 0, startCycles = 0;
+   char* UART = (char*)0x00010004;
+   char intAsStr[33];
    srand(SEED);
 
    for(int i = 0; i < ITERATIONS; i++) 
       {
       for(int j = 0; j < DATA_SIZE; j++)
          {
-         array[j] = rand();
+         array[j] = rand() % 9268;
          }
 
-      asm volatile("addi %0, tp, 0"
-                   :"=r" (startCycles)
-		   :"r" (startCycles)
-		   :"cc"
-		   );
+      asm volatile("li tp, 1");
 
 
       // sort the array
@@ -40,44 +39,29 @@ int main()
 
 
 
-    /* //print the results
-    printf( "\n" );
-    for( int i = 0; i < DATA_SIZE; i++ )
-       {
-       printf( "%3d", array[ i ] );
-       
-       if( ( i + 1 ) % 10 == 0 )
-          {
-          printf( "\n" );
-          }
-       }
-   printf( "\n" );*/
       *LED = 4;
 
-      asm volatile("addi %0, tp, 0"
-                   :"=r" (endCycles)
-		   :"r" (endCycles)
-		   :"cc"
-		   );
 
-   //sendIntToUart(endCycles - startCycles);
 
-     /* for( int i = 0; i < DATA_SIZE; i++ )
-         {
-         sendIntToUart( array[i] );
-         }
-      */
-
-      totalCycles += (endCycles - startCycles);
       
       }
-  
+
+
+   asm volatile("li tp, 2");
+   sendStringToUart("Done\n\rArray:\n\r", UART);
+
+   
+   for(int i = 0; i < DATA_SIZE; i++)
+      {
+      getStr(array[i], intAsStr);
+      sendStringToUart(intAsStr, UART);
+      sendStringToUart(", ", UART);
+      }
+
+
    *LED = 8;
 
-   *UART = (totalCycles / ITERATIONS) >> 24;
-   *UART = (totalCycles / ITERATIONS) >> 16;
-   *UART = (totalCycles / ITERATIONS) >> 8;
-   *UART = (totalCycles / ITERATIONS);
+   while(1);   
 
    return 0;
    }

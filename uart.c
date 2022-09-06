@@ -1,35 +1,28 @@
 #include "uart.h"
 #include <string.h>
 
+void sendCharToUart(const char inChar, char* address)                           
+   {                                                                            
+                                                                                
+   *address = inChar;                                                           
+                                                                                
+   }                                                                            
+                                                                                
+void sendStringToUart(const char inStr[], char* address)                        
+   {                                                                            
+                                                                                
+   int len = strlen(inStr);                                                     
+   int index;                                                                   
+                                                                                
+   for(index = 0; index <= len ; index++)                                       
+      {                                                                         
+                                                                                
+      sendCharToUart(inStr[index], address);                                    
+                                                                                
+      }                                                                         
+   }   
 
-void sendStringToUart(char inStr[], char* address)
-   {
-
-   int index;
-   int length = (int) strlen(inStr);
-
-   for(index = 0; index < length; index++)
-      {
-      
-      sendCharToUart(inStr[index], address);
-
-      }
-
-   }
-
-
-void sendCharToUart(char inChar, char* address)
-   {
-
-
-   *address = inChar;
-
-
-   }
-
-
-
-void sendIntToUart(int num, char* address)
+void sendIntToUart(const int num, char* address)
    {
    
    (*address) = num >> 24;
