@@ -3,14 +3,11 @@
 #include "uart.h"
 #include "intToStr.h"
 
-void multiplyMatricies( const int factorOne[][ MATRIX_1_COLS], const int
-          factorTwo[][ MATRIX_2_COLS ], int productMatrix[][ MATRIX_2_COLS ] );
-
+void multiplyMatricies( const int factorOne[][ MATRIX_COLS], const int
+          factorTwo[][ MATRIX_COLS ], int productMatrix[][ MATRIX_COLS ] );
 int findDotProduct( const int row, const int col, const int
-        factorOne[][ MATRIX_1_COLS ], const int factorTwo[][ MATRIX_2_COLS ] );
-
-int getRand();
-void printMatrix(int matrix[][MATRIX_1_COLS], char* address);
+        factorOne[][ MATRIX_COLS ], const int factorTwo[][ MATRIX_COLS ] );
+void printMatrix(int matrix[][MATRIX_COLS], char* address);
 
 // main program
 int main()
@@ -21,9 +18,9 @@ int main()
    char* LED = (char*)0x00010000;
    char* UART = (char*)0x00010004;
 
-   int matrixOne[ MATRIX_1_ROWS ][ MATRIX_1_COLS ];
-   int matrixTwo[ MATRIX_2_ROWS ][ MATRIX_2_COLS ];
-   int productMatrix[ MATRIX_1_ROWS ][ MATRIX_2_COLS ];
+   int matrixOne[ MATRIX_ROWS ][ MATRIX_COLS ];
+   int matrixTwo[ MATRIX_ROWS ][ MATRIX_COLS ];
+   int productMatrix[ MATRIX_ROWS ][ MATRIX_COLS ];
 
 
    srand(SEED);
@@ -34,19 +31,19 @@ int main()
       *LED = 1;
 
       // fill the matricies
-      for(rowIndex = 0; rowIndex < MATRIX_1_ROWS; rowIndex++)
+      for(rowIndex = 0; rowIndex < MATRIX_ROWS; rowIndex++)
          {
-         for(colIndex = 0; colIndex < MATRIX_1_COLS; colIndex++)
+         for(colIndex = 0; colIndex < MATRIX_COLS; colIndex++)
             {
-            matrixOne[rowIndex][colIndex] = getRand();
+            matrixOne[rowIndex][colIndex] = rand() % 4634;
             }
          }
 
-      for(rowIndex = 0; rowIndex < MATRIX_2_ROWS; rowIndex++)
+      for(rowIndex = 0; rowIndex < MATRIX_ROWS; rowIndex++)
          {
-         for(colIndex = 0; colIndex < MATRIX_2_COLS; colIndex++)
+         for(colIndex = 0; colIndex < MATRIX_COLS; colIndex++)
             {
-            matrixTwo[rowIndex][colIndex] = getRand();
+            matrixTwo[rowIndex][colIndex] = rand() % 4634;
 	    }
          }
 
@@ -98,16 +95,16 @@ int main()
    }
 
 
-void printMatrix(int matrix[][MATRIX_1_COLS], char* address)
+void printMatrix(int matrix[][MATRIX_COLS], char* address)
    {
 
    char intAsStr[33];
    int rowIndex, colIndex;
 
 
-   for(rowIndex = 0; rowIndex < MATRIX_1_ROWS; rowIndex++)
+   for(rowIndex = 0; rowIndex < MATRIX_ROWS; rowIndex++)
       {
-      for(colIndex = 0; colIndex< MATRIX_1_COLS; colIndex++)
+      for(colIndex = 0; colIndex< MATRIX_COLS; colIndex++)
          {
 
          getStr(matrix[rowIndex][colIndex], intAsStr);
@@ -119,16 +116,16 @@ void printMatrix(int matrix[][MATRIX_1_COLS], char* address)
 
    }
 
-void multiplyMatricies( const int factorOne[][ MATRIX_1_COLS ],
-  const int factorTwo[][ MATRIX_2_COLS ], int productMatrix[][ MATRIX_2_COLS] )
+void multiplyMatricies( const int factorOne[][ MATRIX_COLS ],
+  const int factorTwo[][ MATRIX_COLS ], int productMatrix[][ MATRIX_COLS] )
    {
    // initialize function/variables
    int rowIndex, colIndex;
 
    // loop across the entire product array
-   for( rowIndex = 0; rowIndex < MATRIX_1_ROWS; rowIndex++ )
+   for( rowIndex = 0; rowIndex < MATRIX_ROWS; rowIndex++ )
       {
-      for( colIndex = 0; colIndex < MATRIX_2_COLS; colIndex++ )
+      for( colIndex = 0; colIndex < MATRIX_COLS; colIndex++ )
          {
 
          // set the row and col of the product matrix to the sum of the dot
@@ -144,13 +141,13 @@ void multiplyMatricies( const int factorOne[][ MATRIX_1_COLS ],
 
 
 int findDotProduct( const int row, const int col, const int
-         factorOne[][ MATRIX_1_COLS ], const int factorTwo[][ MATRIX_2_COLS ] )
+         factorOne[][ MATRIX_COLS ], const int factorTwo[][ MATRIX_COLS ] )
    {
    // intialize function/variables
    int dotProduct = 0, index;
 
    // loop from starting index to ending index
-   for( index = 0; index < MATRIX_1_COLS; index++ )
+   for( index = 0; index < MATRIX_COLS; index++ )
       {
       // add the product of corresponding places in the factors
       dotProduct +=
@@ -160,20 +157,4 @@ int findDotProduct( const int row, const int col, const int
 
    // return the dot product
    return dotProduct;
-   }
-
-int getRand()
-   {
-
-   int num = 0;
-
-   while(num == 0)
-      {
-      num = rand() % 4634;
-      }
-   return num;
-
-
-
-
    }
