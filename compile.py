@@ -39,10 +39,8 @@ def write_file(data_size, seed, iterations, program, rows, cols):
         if program != "matrix_multiplication" and program != "two_dimensional_convoluton":
             outfile.write("const int DATA_SIZE = " + (data_size) + ";\n")
         else:
-            outfile.write("const int MATRIX_1_ROWS = " + rows + ";\n")
-            outfile.write("const int MATRIX_1_COLS = " + cols + ";\n")
-            outfile.write("const int MATRIX_2_ROWS = " + cols + ";\n")
-            outfile.write("const int MATRIX_2_COLS = " + rows + ";\n")
+            outfile.write("const int MATRIX_ROWS = " + rows + ";\n")
+            outfile.write("const int MATRIX_COLS = " + cols + ";\n")
             
 
         outfile.write("const int SEED = " + (seed) + ";\n")
