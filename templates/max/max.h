@@ -2,7 +2,6 @@
 #define SCAN_H
 
 // header files
-#include <stdio.h>
 #include <stdlib.h>
 
 

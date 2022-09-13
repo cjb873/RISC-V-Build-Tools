@@ -1,5 +1,4 @@
 
-
 // constants
 const int LARGEST_VALUE_POSSIBLE = 24959;
 const int NOT_FOUND = -99999;
@@ -12,28 +11,28 @@ int findLargestNumber( int arr[] );
 int main()
    {
 
-   // set value to start timer
-   asm( "li tp, 1" );
 
 
 
-   // declare variables 
+
+   // declare variables
    int arr[ CAPACITY ];
    int *largestPtr = (int*)0x00020000; // placed at 32768 in memory
    int loopIndex;
-  
+
+
+   srand( SEED );
+
    // add the first 277 nodes
    for( loopIndex = 0; loopIndex < CAPACITY; loopIndex++ )
       {
-      if( loopIndex == 277 )
-         {
-	 arr[ loopIndex ] = LARGEST_VALUE_POSSIBLE ;
-         }
-      else
-         {
-         arr[ loopIndex ] = loopIndex;
-         }
+
+      arr[ loopIndex ] = rand();
+
       }
+
+   asm( "li tp, 1" );
+
 
    // find the largest value
    //largestInSet = findLargestNumber( headNode );
@@ -69,8 +68,8 @@ int findLargestNumber( int arr[] )
 	 currentLargest = arr[ loopIndex ];
 	 }
       }
-   
-   
+
+
    // return
    return currentLargest;
 
