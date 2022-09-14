@@ -4,6 +4,8 @@ unset bit_width
 unset input
 unset output
 objcopy="/opt/riscv/bin/riscv32-unknown-elf-objcopy"
+
+
 bin2hex="$PWD/freedom-bin2hex.sh"
 while [[ "$1" != "" ]]
 do
