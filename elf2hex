@@ -3,10 +3,8 @@
 unset bit_width
 unset input
 unset output
-objcopy="/opt/riscv/bin/riscv32-unknown-elf-objcopy"
-
-
-bin2hex="$PWD/freedom-bin2hex.sh"
+objcopy="/usr/local/riscv32/bin/riscv32-unknown-elf-objcopy"
+bin2hex="/usr/local/bin/riscv32-unknown-elf-bin2hex"
 while [[ "$1" != "" ]]
 do
     case "$1" in

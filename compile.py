@@ -53,7 +53,7 @@ def write_file(data_size, seed, iterations, program, rows, cols):
 
 def compile_program(program, multiplication):
 
-    compiler_str = "/opt/riscv/bin/riscv32-unknown-elf-gcc -Ttext 0x00000000 -nostartfiles -e main -march=rv32i"
+    compiler_str = "/usr/local/riscv32/bin/riscv32-unknown-elf-gcc -Ttext 0x00000000 -nostartfiles -e main -march=rv32i"
 
     if multiplication:
         compiler_str += "m"
