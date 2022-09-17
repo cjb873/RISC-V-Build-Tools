@@ -1,3 +1,7 @@
+#include <stdlob.h>
+#include "intToStr.h"
+#include "uart.h"
+
 
 // constants
 const int LARGEST_VALUE_POSSIBLE = 24959;
