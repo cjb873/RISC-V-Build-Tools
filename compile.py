@@ -16,19 +16,19 @@ def parse_argv():
 
     for argument in sys.argv:
         if "--data" in argument:
-            data_size = argument[7:]
+            data_size = argument.split("=")[1]
         elif "--seed" in argument:
-            seed = argument[7:]
+            seed = argument.split("=")[1]
         elif "--iterations" in argument:
-            iterations = argument[13:]
+            iterations = argument.split("=")[1]
         elif "--program" in argument:
-            program = argument[10:]
+            program = argument.split("=")[1]
         elif "-m" in argument:
             multiplication = True
         elif "--rows" in argument:
-            rows = argument[7:]
+            rows = argument.split("=")[1]
         elif "--columns" in argument:
-            cols = argument[10:]
+            cols = argument.split("=")[1]
     
     return data_size, seed, iterations, program, multiplication, rows, cols
 
