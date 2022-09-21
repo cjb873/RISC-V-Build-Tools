@@ -13,6 +13,7 @@ def parse_argv():
     program = "quicksort"
     multiplication = False
     rows, cols = "3", "3"
+    keep_binary = True
 
     for argument in sys.argv:
         if "--data" in argument:
@@ -29,8 +30,10 @@ def parse_argv():
             rows = argument.split("=")[1]
         elif "--columns" in argument:
             cols = argument.split("=")[1]
-    
-    return data_size, seed, iterations, program, multiplication, rows, cols
+        elif "-k" in argument:
+            keep_binary = True
+
+    return data_size, seed, iterations, program, multiplication, rows, cols, keep_binary
 
 
 def write_file(data_size, seed, iterations, program, rows, cols):
@@ -51,7 +54,7 @@ def write_file(data_size, seed, iterations, program, rows, cols):
                 outfile.write(line)
 
 
-def compile_program(program, multiplication):
+def compile_program(program, multiplication, keep_binary):
 
     compiler_str = "/usr/local/riscv32/bin/riscv32-unknown-elf-gcc -Ttext 0x00000000 -nostartfiles -e main -march=rv32i"
 
@@ -65,11 +68,13 @@ def compile_program(program, multiplication):
     print("Running elf2hex")
     run("./elf2hex --bit-width 32 --input " + program + " --output " + program + ".hex", shell=True)
     print("Cleaning up")
-    run("rm " + program + " " + program + ".c", shell=True)
+    if not keep_binary:
+        run("rm " + program, shell=True)
+    run("rm " + program + ".c", shell=True)
 
 
 def main():
-    data_size, seed, iterations, program, multiplication, rows, cols = parse_argv() 
+    data_size, seed, iterations, program, multiplication, rows, cols, keep_binary = parse_argv() 
     
     if program != "matrix_multiplication" and program != "two_dimensional_convolution":
         print("Size: " + data_size)
@@ -80,10 +85,11 @@ def main():
     print("Seed: " + seed)
     print("Iterations: " + iterations)
     print("Multiplication: " + str(multiplication))
+    print("Keep Binary: " + str(keep_binary))
     print("Program: " + program)
 
     write_file(data_size, seed, iterations, program, rows, cols)
-    compile_program(program, multiplication)
+    compile_program(program, multiplication, keep_binary)
 
 
 if __name__ == "__main__":
