@@ -14,7 +14,7 @@ void sendStringToUart(const char inStr[], char* address)
    int len = strlen(inStr);                                                     
    int index;                                                                   
                                                                                 
-   for(index = 0; index <= len ; index++)                                       
+   for(index = 0; index <= len; index++)                                       
       {                                                                         
                                                                                 
       sendCharToUart(inStr[index], address);                                    
@@ -22,12 +22,3 @@ void sendStringToUart(const char inStr[], char* address)
       }                                                                         
    }   
 
-void sendIntToUart(const int num, char* address)
-   {
-   
-   (*address) = num >> 24;
-   (*address) = num >> 16;
-   (*address) = num >> 8;
-   (*address) = num;
-
-   }
