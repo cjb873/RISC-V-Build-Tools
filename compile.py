@@ -5,6 +5,9 @@ import sys
 from time import time
 from math import floor
 
+COMPILER = "/opt/riscv/bin/riscv32-unknown-elf-gcc"
+ARGUMENTS = " -Ttext 0x00000000 -e main -nostartfiles -O0 -mabi=ilp32 -march=rv32i"
+
 
 def parse_argv():
     data_size = "128" 
@@ -53,11 +56,11 @@ def write_file(data_size, seed, iterations, program, rows, cols):
 
 def compile_program(program, multiplication):
 
-    compiler_str = "/opt/riscv/bin/riscv32-unknown-elf-gcc -Ttext 0x00000000 -nostartfiles -e main -march=rv32i"
+    compiler_str = COMPILER + ARGUMENTS
 
     if multiplication:
         compiler_str += "m"
-    compiler_str += " -mabi=ilp32 -O0 " 
+    compiler_str += " "
     print("Compiling with str: " + compiler_str)   
  
     run(compiler_str + program + ".c uart.c intToStr.c -o " + program, shell=True)
