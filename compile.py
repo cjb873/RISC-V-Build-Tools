@@ -16,7 +16,7 @@ def parse_argv():
     program = "quicksort"
     multiplication = False
     rows, cols = "3", "3"
-    keep_binary = True
+    keep_binary = False 
 
     for argument in sys.argv:
         if "--data" in argument:

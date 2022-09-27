@@ -7,32 +7,44 @@ from math import ceil
 
 
 OBJDUMP = "/usr/local/riscv/bin/riscv32-unknown-elf-objdump"
+DUMP_FILE = "dump"
 
 
 def right_line(line: str) -> bool:
     header = search("<.*>:$", line)
     
-    if ("file format" not in line) and ("Disassembly" not in line) and (header is None) and (not line.isspace()):
+    if ("file format" not in line) and ("Disassembly" not in line) and \
+       (header is None) and (not line.isspace()):
         return True
 
     return False
 
-def get_data_section(program: str) -> int:
+def get_data_section(program: str, section: str) -> int:
     length = 0
     num_zeroes = 0
+    prev_zero = False
 
-    run(OBJDUMP + " -D " + program + " -j .data -z > dump", shell=True)
+    run(OBJDUMP + " -D " + program + " -j " + section + " -z >" + DUMP_FILE, \
+        shell=True)
 
-    with open("dump", "r") as dumpfile:
-        for line in dumpfile:
+    
+
+    with open(DUMP_FILE, "r") as dump_file:
+        for line in dump_file:
             if right_line(line):
                 line = line.split(":")[1]
                 line = line.split("\t")[1]
                 line = line.strip()
-                if len(line) == 4:
-                    length = length + 0.5
-                    if  "0000" in line:
-                        num_zeroes = num_zeroes + 0.5
+                if len(line) <= 4:
+                    length = length + 0.5 
+                    if "0000" in line:
+                        if not prev_zero:
+                            prev_zero = True
+                        else:
+                            prev_zero = False
+                            num_zeroes = num_zeroes + 1
+                    else:
+                        prev_zero = False
                 elif len(line) == 8:
                     length = length + 1
 
@@ -41,14 +53,14 @@ def get_data_section(program: str) -> int:
 def get_text_section(program: str) -> int:
     length = 0
     
-    run(OBJDUMP + " -D " + program + " -j .text > dump", shell=True)
+    run(OBJDUMP + " -D " + program + " -j .text -z >" + DUMP_FILE, shell=True)
     
-    with open("dump", "r") as dumpfile:
-        for line in dumpfile:
+    with open(DUMP_FILE, "r") as dump_file:
+        for line in dump_file:
             length = line.split(":")[0]
 
 
-    return int(length, 16) / 4 
+    return int(length, 16) / 4 + 1 
             
 
 def get_program():
@@ -72,13 +84,22 @@ def main():
 
 
     prog_length = get_text_section(bin_file)
-    data_length, num_zeroes = get_data_section(bin_file)
+    data_length, data_zeroes = get_data_section(bin_file, ".data")
+    sdata_length, sdata_zeroes = get_data_section(bin_file, ".sdata")
+    rodata_length, rodata_zeroes = get_data_section(bin_file, ".rodata")
+    
 
-    print("The length of .data including zeros is " + str(data_length) + ".")
-    print("There are " + str(num_zeroes) + " zeroes.")
-    # print("The length of .text section is " + str(prog_length) + " instructions.")
-
-    # clean_up()
+    print("The length of .data including zeroes is " + str(data_length) + ".")
+    print("There are " + str(data_zeroes) + " zeroes in .data.\n\n")
+    print("The length of .sdata including zeroes is " + str(sdata_length) + ".")
+    print("There are " + str(sdata_zeroes) + " zeroes in .sdata.\n\n")
+    print("The length of .rodata including zeroes is " + str(rodata_length) + 
+          ".")
+    print("There are " + str(rodata_zeroes) + " zeroes in .rodata.\n\n")
+    print("The length of .text section is " + str(prog_length) + \
+          " instructions.\n\n")
+    
+    clean_up()
 
 
 if __name__ == "__main__":
