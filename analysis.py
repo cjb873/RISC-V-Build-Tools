@@ -11,13 +11,16 @@ DUMP_FILE = "dump"
 
 
 def right_line(line: str) -> bool:
+    # search for actual instruction, not header
     header = search("<.*>:$", line)
     
+    # check that line is an instruction, not extra information
     if ("file format" not in line) and ("Disassembly" not in line) and \
        (header is None) and (not line.isspace()):
         return True
 
     return False
+
 
 def get_data_section(program: str, section: str) -> int:
     length = 0
@@ -27,17 +30,22 @@ def get_data_section(program: str, section: str) -> int:
     run(OBJDUMP + " -D " + program + " -j " + section + " -z >" + DUMP_FILE, \
         shell=True)
 
-    
-
     with open(DUMP_FILE, "r") as dump_file:
         for line in dump_file:
             if right_line(line):
+                
+                # get just the hexadecimal code
                 line = line.split(":")[1]
                 line = line.split("\t")[1]
                 line = line.strip()
+
+                # check for half-word
                 if len(line) <= 4:
                     length = length + 0.5 
+
+                    # check if line is just zero
                     if "0000" in line:
+                        # check if entire word is just zero
                         if not prev_zero:
                             prev_zero = True
                         else:
@@ -45,10 +53,13 @@ def get_data_section(program: str, section: str) -> int:
                             num_zeroes = num_zeroes + 1
                     else:
                         prev_zero = False
+                
+                # check for entire word
                 elif len(line) == 8:
                     length = length + 1
 
-    return int(ceil(length)), int(ceil(num_zeroes))
+    return length, num_zeroes
+
 
 def get_text_section(program: str) -> int:
     length = 0
@@ -73,7 +84,6 @@ def get_program():
     return program
 
 
-
 def clean_up():
     run("rm dump", shell=True)
 
@@ -89,25 +99,18 @@ def main():
     rodata_length, rodata_zeroes = get_data_section(bin_file, ".rodata")
     
 
-    print("The length of .data including zeroes is " + str(data_length) + ".")
+    print("\nThe length of .data including zeroes is " + str(data_length) + ".")
     print("There are " + str(data_zeroes) + " zeroes in .data.\n\n")
     print("The length of .sdata including zeroes is " + str(sdata_length) + ".")
     print("There are " + str(sdata_zeroes) + " zeroes in .sdata.\n\n")
     print("The length of .rodata including zeroes is " + str(rodata_length) + 
           ".")
     print("There are " + str(rodata_zeroes) + " zeroes in .rodata.\n\n")
-    print("The length of .text section is " + str(prog_length) + \
-          " instructions.\n\n")
+    print("The length of .text is " + str(prog_length) + \
+          " instructions.\n")
     
     clean_up()
 
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
