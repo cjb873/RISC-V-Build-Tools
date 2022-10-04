@@ -17,7 +17,7 @@ void convolution( const int matrix[][ MATRIX_COLS ], const int
 bool hasNeighbors( const int matrix[][ MATRIX_COLS ], int row, int col );
 int findValue( const int matrix[][ MATRIX_COLS ], const int 
                                    kernel[][ KERNEL_COLS ], int row, int col );
-void printMatrix(int matrix[MATRIX_ROWS * MATRIX_COLS * 3], char* address);
+void printMatrix( int matrix[ MATRIX_ROWS * MATRIX_COLS * 3 ], char* address );
 
 
 // Main Program
@@ -25,8 +25,8 @@ int main()
    {
 
    int startCycles = 0, endCycles = 0;
-   char* LED = (char*)0x00010000;
-   char* UART = (char*)0x00010004;
+   char* LED = ( char* )0x00010000;
+   char* UART = ( char* )0x00010004;
    int rowIndex, colIndex, iteration = 0;
 
    srand( SEED );
@@ -159,7 +159,7 @@ int findValue( const int matrix[][ MATRIX_COLS ], const int
    }
 
 
-void printMatrix(int matrix[MATRIX_ROWS * MATRIX_COLS * 3], char* address)
+void printMatrix( int matrix[MATRIX_ROWS * MATRIX_COLS * 3], char* address )
    {
 
    char intAsStr[33];
@@ -167,34 +167,34 @@ void printMatrix(int matrix[MATRIX_ROWS * MATRIX_COLS * 3], char* address)
    int length = 27;
 
 
-   for(index = 0; index < length; index++)
+   for( index = 0; index < length; index++ )
       {
       
       /*
-      if(index % (MATRIX_ROWS * MATRIX_COLS) == 0)
+      if( index % ( MATRIX_ROWS * MATRIX_COLS ) == 0 )
          {
          
-	 if(index == 0)
+	 if( index == 0 )
 	    {
-            sendStringToUart("Factor One:", address);
+            sendStringToUart( "Factor One:", address );
 	    }
-	 else if(index == MATRIX_ROWS * MATRIX_COLS)
+	 else if( index == MATRIX_ROWS * MATRIX_COLS )
 	    {
-            sendStringToUart("Factor Two:", address);
+            sendStringToUart( "Factor Two:", address );
 	    }
 	 else
 	    {
-            sendStringToUart("Product:", address);
+            sendStringToUart( "Product:", address );
             }
 	 }
-      if(index % MATRIX_COLS == 0)
+      if( index % MATRIX_COLS == 0 )
          {
-         sendStringToUart("\n\r", address);
+         sendStringToUart( "\n\r", address );
 	 }
       */
-      getStr(matrix[index], intAsStr);
-      sendStringToUart(intAsStr, address);
-      sendStringToUart(", ", address);
+      getStr( matrix[ index ], intAsStr );
+      sendStringToUart( intAsStr, address );
+      sendStringToUart( ", ", address );
      
 
       }
