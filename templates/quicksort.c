@@ -19,19 +19,20 @@ int main()
    // intitialize variables
    int array[ DATA_SIZE ];
    int loopIndex, arrIndex;
-   char* LED = (char*)0x00010000;
-   char* UART = (char*)0x00010004;
-   char intAsStr[33];
-   srand(SEED);
+   char* LED = ( char* )0x00010000;
+   char* UART = ( char* )0x00010004;
+   char intAsStr[ 33 ];
+   srand( SEED );
+   int index, iteration;
 
-   for(int i = 0; i < ITERATIONS; i++) 
+   for( iteratiom = 0; iteration < ITERATIONS; iteration++ ) 
       {
-      for(int j = 0; j < DATA_SIZE; j++)
+      for( index = 0; index < DATA_SIZE; index++)
          {
-         array[j] = rand() % 9268;
+         array[ index ] = rand();
          }
 
-      asm volatile("li tp, 1");
+      asm volatile( "li tp, 1" );
 
 
       // sort the array
@@ -47,21 +48,21 @@ int main()
       }
 
 
-   asm volatile("li tp, 2");
-   sendStringToUart("Done\n\rArray:\n\r", UART);
+   asm volatile( "li tp, 2" );
+   sendStringToUart( "Done\n\rArray:\n\r", UART );
 
    
-   for(int i = 0; i < DATA_SIZE; i++)
+   for( index = 0; i < DATA_SIZE; index++ ) 
       {
-      getStr(array[i], intAsStr);
-      sendStringToUart(intAsStr, UART);
-      sendStringToUart(", ", UART);
+      getStr( array[ index ], intAsStr );
+      sendStringToUart( intAsStr, UART );
+      sendStringToUart( ", ", UART );
       }
 
 
    *LED = 8;
 
-   while(1);   
+   while( 1 );   
 
    return 0;
    }
@@ -130,7 +131,4 @@ int runPartition( int array[], int lowIndex, int highIndex )
    
    // return the pivot index   
    return pivotIndex;
-
-
-   }
 
