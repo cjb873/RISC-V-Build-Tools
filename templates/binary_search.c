@@ -19,15 +19,14 @@ int main()
    // variable initialization
    int array[ DATA_SIZE ];
 
-   char* LED = (char*)0x00010000;
-   char* UART = (char*)0x00010004;
+   char* LED = ( char* )0x00010000;
+   char* UART = ( char* )0x00010004;
 
 
    /* change variables for use in vivado */
-   unsigned int* searchCounter = (int*)0x00000500; // 320 in memory
-   int loopIndex;
+   unsigned int* searchCounter = ( int* )0x00000500; // 320 in memory
+   int loopIndex, iteration, offsetVal, searchVal;
    *searchCounter = 0;
-   int offsetVal, searchVal;
 
    srand( SEED );
 
@@ -42,16 +41,16 @@ int main()
       
       }
 
-   for(int i = 0; i < ITERATIONS; i ++)
+   for( iteration = 0; i < ITERATIONS; i ++ )
       {
 
-      asm volatile("li tp, 1");
+      asm volatile( "li tp, 1" );
       binarySearch( searchVal, searchCounter, array, DATA_SIZE, 0, UART );
    
       
       }
 
-   asm volatile("li tp, 2");
+   asm volatile( "li tp, 2" );
 
 
    
