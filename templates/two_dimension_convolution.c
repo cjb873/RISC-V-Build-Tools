@@ -1,14 +1,12 @@
 #include <stdbool.h>
+#include <stdlib.h>
+#include "intToStr.h"
 #include "uart.h"
 
 // Macros - used only for array initialization
-#define MATRIX_INIT 5
 #define KERNEL_INIT 3
 
 // Global Constants
-const int MATRIX_ROWS = 5;
-const int MATRIX_COLS = 5;
-
 const int KERNEL_ROWS = 3;
 const int KERNEL_COLS = 3;
 
@@ -19,6 +17,7 @@ void convolution( const int matrix[][ MATRIX_COLS ], const int
 bool hasNeighbors( const int matrix[][ MATRIX_COLS ], int row, int col );
 int findValue( const int matrix[][ MATRIX_COLS ], const int 
                                    kernel[][ KERNEL_COLS ], int row, int col );
+void printMatrix(int matrix[MATRIX_ROWS * MATRIX_COLS * 3], char* address);
 
 
 // Main Program
@@ -26,55 +25,54 @@ int main()
    {
 
    int startCycles = 0, endCycles = 0;
-   int* LED = (int*)0x00010000;
+   char* LED = (char*)0x00010000;
+   char* UART = (char*)0x00010004;
+   int rowIndex, colIndex, iteration = 0;
+
+   srand( SEED );
 
    *LED = 1;
 
-   asm volatile( "addi %0, tp, 0"
-                 :"=r" ( startCycles )
-		 :"r" ( startCycles )
-		 :"cc"
-		 );
 
 
    // Declare Variables
-   int matrix[][ MATRIX_INIT ] = {
-                                 { 1, 25, 24, 26, 3 },
-				 { 2, 32, 18, 12, 50 },
-				 { 6, 72, 12, 11, 20 },
-				 { 16, 17, 21, 0, 22 },
-				 { 12, 11, 10, 8, 7 }
-                                 };
+   int matrix[ MATRIX_ROWS ][ MATRIX_COLS ];
+
+   int result_matrix[ MATRIX_ROWS ][ MATRIX_COLS ];
+   
    int kernel[][ KERNEL_INIT ] = {
                                  { 0, 0, 0 },
 				 { 0, 1, 0,},
 				 { 0, 0, 0 },
 				 }; // identity kernel
+   
 
-   int result_matrix[ MATRIX_ROWS ][ MATRIX_COLS ];
+   for( iteration = 0; iteration < ITERATIONS; iteration++ )
+      {
+      for( rowIndex = 0; rowIndex < MATRIX_ROWS; rowIndex++ )
+         {
+         for( colIndex = 0; colIndex < MATRIX_COLS; colIndex++ )
+            {
+
+	    matrix[ rowIndex ][ colIndex ] = rand() % 4684;
+         
+	    }
+         }
+
+      asm volatile( "li tp, 1"); 
+
+      // Process the two dimension convolution
+      convolution( matrix, kernel, result_matrix );
 
 
-   // Process the two dimension convolution
-   convolution( matrix, kernel, result_matrix );
+      }
 
    *LED = 8;
 
-   asm volatile( "addi %0, tp, 0"
-                 :"=r" ( endCycles )
-		 :"r" ( endCycles )
-		 :"cc"
-		 );
+   asm volatile( "li tp, 2" );
    
    
-   // Print the resulting matrix - remove for vivado
-   for( int rowIndex = 0; rowIndex < MATRIX_ROWS; rowIndex++ )
-      {
-      for( int colIndex = 0; colIndex < MATRIX_COLS; colIndex++ )
-         {
-	 sendIntToUart(result_matrix[rowIndex][colIndex]);
-	 }
-      }
- 
+   // printMatrix( result_matrix, UART ); 
 
 
    }
@@ -157,5 +155,48 @@ int findValue( const int matrix[][ MATRIX_COLS ], const int
 
 
 
+
+   }
+
+
+void printMatrix(int matrix[MATRIX_ROWS * MATRIX_COLS * 3], char* address)
+   {
+
+   char intAsStr[33];
+   int index; 
+   int length = 27;
+
+
+   for(index = 0; index < length; index++)
+      {
+      
+      /*
+      if(index % (MATRIX_ROWS * MATRIX_COLS) == 0)
+         {
+         
+	 if(index == 0)
+	    {
+            sendStringToUart("Factor One:", address);
+	    }
+	 else if(index == MATRIX_ROWS * MATRIX_COLS)
+	    {
+            sendStringToUart("Factor Two:", address);
+	    }
+	 else
+	    {
+            sendStringToUart("Product:", address);
+            }
+	 }
+      if(index % MATRIX_COLS == 0)
+         {
+         sendStringToUart("\n\r", address);
+	 }
+      */
+      getStr(matrix[index], intAsStr);
+      sendStringToUart(intAsStr, address);
+      sendStringToUart(", ", address);
+     
+
+      }
 
    }
