@@ -199,7 +199,7 @@ int getRand()
    while(num == 0)
       {
       
-      num = rand() % 16;
+      num = rand() % 4864;
       
       }
 
