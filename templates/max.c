@@ -20,9 +20,9 @@ void main()
    int loopIndex;
    int maxValIndex;
    int maxVal;
-   char* LED = (char*)0x00010000;
-   char* UART = (char*)0x00010004;
-   char intAsStr[33];
+   char* LED = ( char* )0x00010000;
+   char* UART = ( char* )0x00010004;
+   char intAsStr[ 33 ];
 
    srand( SEED );
 
@@ -83,7 +83,7 @@ void main()
    *LED = 8;
 
 
-   while(1);
+   while( 1 );
 
 
    }
