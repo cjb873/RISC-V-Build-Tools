@@ -6,7 +6,7 @@
 
 // Function Prototypes
 void binarySearch( int keyValue, int *counter, int array[], int upper,
-                                                                   int lower );
+                                                       int lower, char* UART );
 
 
 
@@ -38,7 +38,7 @@ int main()
       {
 
       // set the value of loop index * 12 in the array
-      array[ loopIndex ] = loopIndex * offestVal;
+      array[ loopIndex ] = loopIndex * offsetVal;
       
       }
 
@@ -46,7 +46,7 @@ int main()
       {
 
       asm volatile("li tp, 1");
-      binarySearch( searchVal, searchCounter, array, DATA_SIZE, 0 );
+      binarySearch( searchVal, searchCounter, array, DATA_SIZE, 0, UART );
    
       
       }
@@ -62,7 +62,7 @@ int main()
 
 // Function Implementation
 void binarySearch( int keyValue, int *counter, int array[], int upper, 
-                                                              int lower )
+                                                        int lower, char* UART )
    {
 
 
@@ -75,14 +75,14 @@ void binarySearch( int keyValue, int *counter, int array[], int upper,
    if( array[ middle ] < keyValue )
       {
 
-      binarySearch( keyValue, counter, array, upper, middle );
+      binarySearch( keyValue, counter, array, upper, middle, UART );
 
       }
    // otherwise, check if the value at the middle is greater than the key
    else if( array[ middle ] > keyValue )
       {
 
-      binarySearch( keyValue, counter, array, middle, lower );
+      binarySearch( keyValue, counter, array, middle, lower, UART );
 
       }
 
@@ -90,10 +90,10 @@ void binarySearch( int keyValue, int *counter, int array[], int upper,
       {
       
       sendStringToUart( "The search key was found after ", UART );
-      intToStr( *counter, intAsStr );
+      getStr( *counter, intAsStr );
       sendStringToUart( intAsStr, UART );
       sendStringToUart( "searches. The value was ", UART );
-      intToStr( keyValue, intAsStr );
+      getStr( keyValue, intAsStr );
       sendStringToUart( ".\n\r", UART );
 
       }

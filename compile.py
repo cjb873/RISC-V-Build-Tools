@@ -45,7 +45,7 @@ def write_file(data_size, seed, iterations, program, rows, cols):
     print("Writing c file")
     with open(program + ".c", 'w', encoding='utf-8') as outfile:
         if program != "matrix_multiplication" and \
-           program != "two_dimensional_convoluton":
+           program != "two_dimension_convolution":
             outfile.write("const int DATA_SIZE = " + (data_size) + ";\n")
         else:
             outfile.write("const int MATRIX_ROWS = " + rows + ";\n")
@@ -84,9 +84,11 @@ def compile_program(program, multiplication, keep_binary):
 def main():
     data_size, seed, iterations, program, multiplication, rows, cols, \
     keep_binary = parse_argv() 
-    
+   
+    print(program)
+
     if program != "matrix_multiplication" and \
-       program != "two_dimensional_convolution":
+       program != "two_dimension_convolution":
         print("Size: " + data_size)
     else:
         print("Rows: " + rows)
