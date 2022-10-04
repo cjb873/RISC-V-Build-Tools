@@ -25,7 +25,7 @@ int main()
    srand( SEED );
    int index, iteration;
 
-   for( iteratiom = 0; iteration < ITERATIONS; iteration++ ) 
+   for( iteration = 0; iteration < ITERATIONS; iteration++ ) 
       {
       for( index = 0; index < DATA_SIZE; index++)
          {
@@ -52,7 +52,7 @@ int main()
    sendStringToUart( "Done\n\rArray:\n\r", UART );
 
    
-   for( index = 0; i < DATA_SIZE; index++ ) 
+   for( index = 0; index < DATA_SIZE; index++ ) 
       {
       getStr( array[ index ], intAsStr );
       sendStringToUart( intAsStr, UART );
@@ -132,6 +132,4 @@ int runPartition( int array[], int lowIndex, int highIndex )
    // return the pivot index   
    return pivotIndex;
 
-
    }
-
