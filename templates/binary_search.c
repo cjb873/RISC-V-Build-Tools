@@ -41,7 +41,7 @@ int main()
       
       }
 
-   for( iteration = 0; i < ITERATIONS; i ++ )
+   for( iteration = 0; iteration < ITERATIONS; iteration++ )
       {
 
       asm volatile( "li tp, 1" );
