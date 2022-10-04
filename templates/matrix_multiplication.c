@@ -6,12 +6,12 @@ void multiplyMatricies( const int factorOne[][ MATRIX_COLS], const int
           factorTwo[][ MATRIX_COLS ], int productMatrix[][ MATRIX_COLS ] );
 int findDotProduct( const int row, const int col, const int
         factorOne[][ MATRIX_COLS ], const int factorTwo[][ MATRIX_COLS ] );
-void printMatrix(int matrix[MATRIX_ROWS * MATRIX_COLS * 3], char* address);
+void printMatrix( int matrix[MATRIX_ROWS * MATRIX_COLS * 3], char* address );
 int getRand();
 void moveMatricies( const int matrixOne[][ MATRIX_COLS ], 
                                           const int matrixTwo[][ MATRIX_COLS ], 
 		                      const int productMatrix[][ MATRIX_COLS ], 
-		             int printMatrix[ MATRIX_ROWS * MATRIX_COLS * 3 ]);
+		             int printMatrix[ MATRIX_ROWS * MATRIX_COLS * 3 ] );
 
 // main program
 int main()
@@ -19,8 +19,8 @@ int main()
 
    // declare variables
    int rowIndex, colIndex, count;
-   char* LED = (char*)0x00010000;
-   char* UART = (char*)0x00010004;
+   char* LED = ( char* )0x00010000;
+   char* UART = ( char* )0x00010004;
 
    int matrixOne[ MATRIX_ROWS ][ MATRIX_COLS ];
    int matrixTwo[ MATRIX_ROWS ][ MATRIX_COLS ];
@@ -28,26 +28,26 @@ int main()
    int printableMatrix[ MATRIX_ROWS * MATRIX_COLS * 3 ];
 
    *LED = 1;
-   srand(SEED);
+   srand( SEED );
 
-   for(count = 0; count < ITERATIONS; count++)
+   for( count = 0; count < ITERATIONS; count++ )
       {
 
        
       // fill the matricies
-      for(rowIndex = 0; rowIndex < MATRIX_ROWS; rowIndex++)
+      for( rowIndex = 0; rowIndex < MATRIX_ROWS; rowIndex++ )
          {
-         for(colIndex = 0; colIndex < MATRIX_COLS; colIndex++)
+         for( colIndex = 0; colIndex < MATRIX_COLS; colIndex++ )
             {
-            matrixOne[rowIndex][colIndex] = getRand();
+            matrixOne[ rowIndex ][ colIndex ] = getRand();
             }
          }
 
-      for(rowIndex = 0; rowIndex < MATRIX_ROWS; rowIndex++)
+      for( rowIndex = 0; rowIndex < MATRIX_ROWS; rowIndex++ )
          {
-         for(colIndex = 0; colIndex < MATRIX_COLS; colIndex++)
+         for( colIndex = 0; colIndex < MATRIX_COLS; colIndex++ )
             {
-            matrixTwo[rowIndex][colIndex] = getRand();
+            matrixTwo[ rowIndex ][ colIndex ] = getRand();
 	    }
          }
 
@@ -69,10 +69,10 @@ int main()
    
 
 
-   sendStringToUart("Done\n\r", UART);
-   moveMatricies(matrixOne, matrixTwo, productMatrix, printableMatrix);
-   printMatrix(printableMatrix, UART);
-   sendStringToUart("\n\r", UART);
+   sendStringToUart( "Done\n\r", UART );
+   moveMatricies( matrixOne, matrixTwo, productMatrix, printableMatrix );
+   printMatrix( printableMatrix, UART );
+   sendStringToUart( "\n\r", UART );
   
 
 
@@ -84,7 +84,7 @@ int main()
 
    *LED = 8;
 
-   while(1);
+   while( 1 );
 
 
    // end the program
@@ -93,32 +93,32 @@ int main()
    }
 
 
-void printMatrix(int matrix[MATRIX_ROWS * MATRIX_COLS * 3], char* address)
+void printMatrix( int matrix[ MATRIX_ROWS * MATRIX_COLS * 3 ], char* address )
    {
 
-   char intAsStr[33];
+   char intAsStr[ 33 ];
    int index; 
    int length = 27;
 
 
-   for(index = 0; index < length; index++)
+   for( index = 0; index < length; index++ )
       {
       
       /*
-      if(index % (MATRIX_ROWS * MATRIX_COLS) == 0)
+      if( index % ( MATRIX_ROWS * MATRIX_COLS ) == 0 )
          {
          
-	 if(index == 0)
+	 if( index == 0 )
 	    {
 
-            sendStringToUart("Factor One:", address);
+            sendStringToUart( "Factor One:", address );
 
 	    }
 
-	 else if(index == MATRIX_ROWS * MATRIX_COLS)
+	 else if( index == MATRIX_ROWS * MATRIX_COLS )
 	    {
 
-            sendStringToUart("Factor Two:", address);
+            sendStringToUart( "Factor Two:", address );
 
 	    }
 
@@ -126,22 +126,23 @@ void printMatrix(int matrix[MATRIX_ROWS * MATRIX_COLS * 3], char* address)
 	    {
 
 
-            sendStringToUart("Product:", address);
+            sendStringToUart( "Product:", address );
 
             }
 
 
 	 }
 
-      if(index % MATRIX_COLS == 0)
+      if( index % MATRIX_COLS == 0 )
          {
 
-         sendStringToUart("\n\r", address);
+         sendStringToUart( "\n\r", address );
+	 
 	 }
       */
-      getStr(matrix[index], intAsStr);
-      sendStringToUart(intAsStr, address);
-      sendStringToUart(", ", address);
+      getStr( matrix[ index ], intAsStr );
+      sendStringToUart( intAsStr, address );
+      sendStringToUart( ", ", address );
      
 
       }
@@ -196,7 +197,7 @@ int getRand()
 
    int num = 0;
 
-   while(num == 0)
+   while( num == 0 )
       {
       
       num = rand() % 4864;
@@ -219,7 +220,7 @@ void moveMatricies( const int matrixOne[][ MATRIX_COLS ],
       {
       for( colIndex = 0; colIndex < MATRIX_COLS; colIndex++ )
          {
-         printMatrix[ printIndex ] = matrixOne[rowIndex][colIndex];
+         printMatrix[ printIndex ] = matrixOne[ rowIndex ][ colIndex ];
 	 printIndex++;
          }
       }
@@ -228,7 +229,7 @@ void moveMatricies( const int matrixOne[][ MATRIX_COLS ],
       {
       for( colIndex = 0; colIndex < MATRIX_COLS; colIndex++ )
          {
-         printMatrix[ printIndex ] = matrixTwo[rowIndex][colIndex];
+         printMatrix[ printIndex ] = matrixTwo[ rowIndex ][ colIndex ];
 	 printIndex++;
          }
       }
@@ -238,7 +239,7 @@ void moveMatricies( const int matrixOne[][ MATRIX_COLS ],
       {
       for( colIndex = 0; colIndex < MATRIX_COLS; colIndex++ )
          {
-         printMatrix[ printIndex ] = productMatrix[rowIndex][colIndex];
+         printMatrix[ printIndex ] = productMatrix[ rowIndex ][ colIndex ];
 	 printIndex++;
          }
       }
