@@ -69,7 +69,7 @@ def compile_program(program, multiplication, keep_binary):
     compiler_str += " "
     print("Compiling with str: " + compiler_str)   
  
-    run(compiler_str + program + ".c -o " + program, shell=True)
+    run(compiler_str + program + ".c intToStr.c uart.c -o " + program, shell=True)
 
     print("Running elf2hex")
     run("./elf2hex --bit-width 32 --input " + program + " --output " + \
