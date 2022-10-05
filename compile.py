@@ -7,8 +7,7 @@ from math import floor
 
 
 COMPILER = "/usr/local/riscv32/bin/riscv32-unknown-elf-gcc"
-ARGUMENTS = " -Ttext 0x00000000 -nostartfiles -e main -O0 -mabi=ilp32" \
-            " -march=rv32i" 
+ARGUMENTS = " -T script.ld -nostartfiles -O0 -mabi=ilp32 -march=rv32i" 
 
 def parse_argv():
     data_size = "128" 
@@ -70,7 +69,7 @@ def compile_program(program, multiplication, keep_binary):
     compiler_str += " "
     print("Compiling with str: " + compiler_str)   
  
-    run(compiler_str + program + ".c uart.c intToStr.c -o " + program, shell=True)
+    run(compiler_str + program + ".c -o " + program, shell=True)
 
     print("Running elf2hex")
     run("./elf2hex --bit-width 32 --input " + program + " --output " + \
