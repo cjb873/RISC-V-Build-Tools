@@ -1,6 +1,7 @@
 # RISCV Build Tools
 These command line tools are intended to help compile benchmarks for a bare-metal RISC-V system. 
 The analysis tool looks at the binary to find the length of the different sections in the binary.
+These tools utilize the [RISC-V GNU Toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain) and SiFive's [elf2hex](https://github.com/sifive/elf2hex) tool.
 
 # Compilation
 An example compilation command looks like:
